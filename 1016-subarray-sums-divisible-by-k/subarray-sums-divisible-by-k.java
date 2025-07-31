@@ -6,7 +6,7 @@ class Solution {
         map.put(0, 1);
         for(int i=0; i<nums.length; i++){
             sum += nums[i];
-            key = (sum % k + k)%k;
+            key = (sum % k + k)%k; // Converting the negative modulo to positive
 
             if(map.containsKey(key)){
                 cnt += map.get(key);
