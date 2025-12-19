@@ -1,3 +1,33 @@
+class Solution {
+    public Node cloneGraph(Node node) {
+        if(node == null) return node;
+        HashMap<Node, Node> map = new HashMap<>();
+        
+        Node root = new Node(node.val);
+        map.put(node, root);
+
+        build(node, map);
+
+        return root;
+    }
+
+    private void build(Node node, HashMap<Node, Node> map){
+        Node root = map.get(node);
+
+        for(Node u : node.neighbors){
+            boolean flag = false;
+            if(map.getOrDefault(u,null) == null){
+                map.put(u, new Node(u.val));
+                flag = true;
+            }
+            root.neighbors.add(map.get(u));
+            if(flag) build(u, map);
+        }
+    }
+}
+
+
+
 /*
 // Definition for a Node.
 class Node {
@@ -18,34 +48,4 @@ class Node {
 }
 */
 
-class Solution {
-    public Node cloneGraph(Node node) {
-        if (node == null) {
-            return null;
-        }
-        Queue<Node> queue = new LinkedList<>();
-        Map<Node, Node> visited = new HashMap<>();
 
-        // Clone the first node and add to queue
-        Node cloneNode = new Node(node.val);
-        visited.put(node, cloneNode);
-        queue.offer(node);
-
-        while (!queue.isEmpty()) {
-            Node curr = queue.poll();
-            
-            // Process all neighbors
-            for (Node neighbor : curr.neighbors) {
-                if (!visited.containsKey(neighbor)) {
-                    // Clone the neighbor
-                    visited.put(neighbor, new Node(neighbor.val));
-                    queue.offer(neighbor);
-                }
-                // Add the cloned neighbor to current node's neighbors
-                visited.get(curr).neighbors.add(visited.get(neighbor));
-            }
-        }
-
-        return cloneNode;
-    }
-}
