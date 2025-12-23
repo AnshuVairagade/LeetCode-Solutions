@@ -1,9 +1,7 @@
+/* 
+Previous solution of O(N^4) is wring BFS as it can be treated using multisource BFS instead of calling BFS for each land node
 
-/* This solution is O(N^4) as it makes call for each land cell to perform BFS
-
-There are m*n land cells then BFS will be called
-and each BFS checks for m*n cells
-
+Overall time complexity will be O(N*N)
 */
 
 class Solution {
@@ -12,45 +10,35 @@ class Solution {
     public int maxDistance(int[][] grid) {
         int n = grid.length;
         int dist[][] = new int[n][n];
+        Queue<Pair> queue = new LinkedList<>();
 
         for(int row[] : dist){
-            Arrays.fill(row, Integer.MAX_VALUE);
+            Arrays.fill(row, -1);
         }
 
         for(int i=0; i<n; i++){
             for(int j=0; j<n; j++){
                 if(grid[i][j] == 1){
-                    bfs(grid, i, j, dist);
+                    dist[i][j] = 0;
+                    queue.offer(new Pair(i,j));
                 }
             }
         }
 
-        int cntLand = 0;
-        int maxDis = 0;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                if(grid[i][j] == 0) cntLand++;
-                maxDis = Math.max(dist[i][j], maxDis);
-            }
-        }
-
-        if(cntLand == n*n || cntLand == 0) return -1;
+        int maxDis = bfs(grid, queue, dist);
 
         return maxDis;
     }
 
-    private void bfs(int[][] grid, int r, int c, int[][] dist){
+    private int bfs(int[][] grid, Queue<Pair> queue, int[][] dist){
         int n = grid.length;
-        Queue<Pair> queue = new LinkedList<>();
-
-        dist[r][c] = 0;
-        queue.offer(new Pair(r,c));
+        
+        int maxDistance = -1;
         while(!queue.isEmpty()){
             Pair node = queue.poll();
 
-            // Possible bug chance of using r and c without reinitalization
-            r = node.r;
-            c = node.c;
+            int r = node.r;
+            int c = node.c;
             
             for(int d=0; d<4; d++){
                 int nr = r + dir[d];
@@ -60,12 +48,15 @@ class Solution {
                     continue;
                 }
 
-                if(dist[nr][nc] > dist[r][c]+1){
-                    dist[nr][nc] = dist[r][c]+1;
-                    queue.offer(new Pair(nr, nc));
-                }
+                if(dist[nr][nc] != -1)  continue;
+
+                dist[nr][nc] = dist[r][c]+1;
+                queue.offer(new Pair(nr, nc));
+                maxDistance = Math.max(maxDistance, dist[nr][nc]);
             }
         }
+
+        return maxDistance;
     }
 
     class Pair{
