@@ -42,6 +42,8 @@ class Solution {
 
 
 /*
+More similar Problems : https://leetcode.com/problems/magnetic-force-between-two-balls/description/comments/1570790/
+
 
 Brute Force: 
 -------------
