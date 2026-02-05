@@ -1,40 +1,27 @@
-// optimized DFS problem
-
 class Solution {
     public List<String> findItinerary(List<List<String>> tickets) {
-        HashMap<String, LinkedList<String>> graph = new HashMap<>();
-        for(List<String> ticket : tickets){
-            String src = ticket.get(0);
-            String dest = ticket.get(1);
-            graph.putIfAbsent(src, new LinkedList<>());
-            graph.get(src).add(dest);
+        HashMap<String, PriorityQueue<String>> hm = new HashMap<>();
+        for(int i =0; i <tickets.size(); i++){
+            String key   = tickets.get(i).get(0);
+            String value = tickets.get(i).get(1);
+            if(!hm.containsKey(key)){
+                PriorityQueue<String> temp = new PriorityQueue<>();
+                hm.put(key, temp);
+            }
+            hm.get(key).add(value);
         }
-
-        graph.keySet().forEach(node -> {
-            Collections.sort(graph.get(node));
-        });
-
-        LinkedList<String> ans = new LinkedList<>();
-        dfs("JFK", ans, graph);
-        return ans;
+        
+        LinkedList<String> res = new LinkedList<>();
+        dfs("JFK", hm, res);
+        return res;
     }
 
-    private void dfs(String src, LinkedList<String> ans, HashMap<String, LinkedList<String>> graph){
-
-        // Source with no adjacent first add to ans then return  
-        if(graph.containsKey(src) == false){
-            ans.addFirst(src); return;
+    public void dfs(String dep, Map<String, PriorityQueue<String>> hm, LinkedList<String> res) {
+        PriorityQueue<String> arrivals = hm.get(dep);
+        while (arrivals != null && !arrivals.isEmpty()) {
+            dfs(arrivals.poll(), hm, res);
         }
 
-        LinkedList<String> ngb = graph.get(src);
-        while(ngb.size() > 0){
-            String dest = ngb.pollFirst();
-            dfs(dest, ans, graph);
-        }
-
-        ans.addFirst(src);
+        res.addFirst(dep);
     }
 }
-
-/* Learning : Upadted dfs traversal to visit nodes in lexicograhical order covering all the edges which different than traversing unvisited node in standard DFS template
-*/
