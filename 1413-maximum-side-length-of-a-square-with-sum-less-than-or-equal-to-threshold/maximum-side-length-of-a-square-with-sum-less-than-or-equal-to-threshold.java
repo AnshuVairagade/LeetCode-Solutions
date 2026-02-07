@@ -6,10 +6,15 @@ class Solution {
         int n = mat[0].length;
 
         int maxSide = 0;
-        for(int side=1; side <= Math.min(m, n); side++){
+        int low = 1, high = Math.min(m, n);
+        while(low <= high){
+            int side = (low + high)/2;
+
             if(checkSquare(side, mat, threshold)){
                 maxSide = side;
+                low = side + 1;
             }
+            else high = side - 1;
         }
 
         return maxSide;
