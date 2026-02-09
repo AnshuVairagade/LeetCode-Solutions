@@ -1,3 +1,9 @@
+/*
+Count of ones and zeros is computed only once as compared to memoization
+
+What will be impact in the time complexity?
+*/ 
+
 class Solution {
     public int findMaxForm(String[] strs, int m, int n) {
         int len = strs.length;
