@@ -1,4 +1,6 @@
-// Hint 2 Builds the answer 
+/* Follow up : 
+In the normal LIS we use Lower Bound but here we used Upper Bound why???
+*/
 
 class Solution {
     public int[] longestObstacleCourseAtEachPosition(int[] obstacles) {
