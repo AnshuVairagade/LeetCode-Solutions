@@ -1,3 +1,17 @@
+/*
+Why Euler??
+Where to start?? 
+Edge Cases >>> (EG, SEG, NEG)
+
+Graph Building ???
+DFS implementation ???
+When to store result ??? Why??
+What to return 
+
+Why previous linkedlist gave me TLE??
+
+*/
+
 class Solution {
     public int[][] validArrangement(int[][] pairs) {
         HashMap<Integer, PriorityQueue<Integer>> graph = new HashMap<>();
