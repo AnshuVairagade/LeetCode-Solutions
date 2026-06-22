@@ -2,33 +2,25 @@ class Solution {
     public long countSubstrings(String s, char c) {
         int n = s.length();
 
-        int cnt = 0;
-        long total = 0;
-
+        long k = 0;
         for(int i=0; i<n; i++){
-            if(s.charAt(i) == c){
-                total += (cnt + 1);
-                cnt = cnt + 1;
-            }
+            if(s.charAt(i) == c) k = k + 1;
         }
 
-        return total;
+        return (k * (k+1))/2;
     }
 }
 
 /*
-Approach: Calculate how many can end at current position, you will find already caluculated about the strating ones.
 
-Because ending one already contains starting ones.
+Intuition: 
 
-Intuition: Monotonicity of increasing substring with previously counted as they can be starting and 
+If 'c' appears k times, each valid substring is formed by choosing
 
+a start and end occurrence of 'c' (start <= end).
 
-i = 2
-total = 1 + 2 + 3
-cnt = 3
+1st occurrence can pair with k occurrences, 2nd with (k-1), ..., last with 1.
 
-
-
+Total substrings = k + (k-1) + ... + 1 = k * (k + 1) / 2.
 
 */
