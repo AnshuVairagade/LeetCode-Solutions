@@ -2,17 +2,39 @@ class Solution {
     public int characterReplacement(String s, int k) {
         int n = s.length();
 
+        /*
+            Common Bug Point in Sliding Window Problems:
+                
+                1) Dynamic window size changes after shrinking
+                    - Whenever sliding window uses information derived from window
+                      like maxFreq, distinctCount, maximumElement
+                      
+                    - Recompute it after shrinking
+                    - Use a data structure that updates correctly
+ 
+                2) Addition and Subtraction of element -> frequency
+
+                3) High and Low pointer movement
+
+                4) Wrong answer calculations.
+
+                5) Invalid Window Condition Bug
+        */
+
+
         int maxLen = 0;
+        int maxFreq = 0;
         int freq[] = new int[26];
 
         int low = 0, high = 0;
         while(high < n){
-
             freq[s.charAt(high)-'A']++;
 
-            // Bug: Runtime Shrinking of window need recomputation of windowLength & maxFrequency.
+            maxFreq = Math.max(maxFreq, freq[s.charAt(high)-'A']);
 
-            while((high - low + 1) - getMaxFrequency(freq) > k){
+            // Logic: Maximum valid window length maintained
+
+            if((high - low + 1) - maxFreq > k){
                 freq[s.charAt(low)-'A']--;
                 low++;
             }
@@ -24,64 +46,28 @@ class Solution {
         return maxLen;
     }
 
-    private int getMaxFrequency(int freq[]){
-        int maxFreq = 0;
-
-        for(int cnt : freq) maxFreq = Math.max(maxFreq, cnt);
-
-        return maxFreq;
-    }
 }
 
 /*
 
-I failed to solve, because I don't understand how to check valid window
-
-Core Logic to calculate valid substring :
-
-    maxFreq = Math.max(maxFreq, freq[s.charAt(i)-'A']);
-
-    replacementNeeded = windowLength - maxFreq
-
-    if(replacementNeeded <= k){
-        maxLen = Math.max(windowLength, maxLen);
-    }
-
-    same logic is implemented in Sliding window optimization:
-    
-    Expand window & calculate answer
+Using the monotonicity of normal sliding window, once valid window is formed try to maintain it.
+Try to find out next winddow with maxFreq increasing.
 
 
+Question:
 
-Brute Force:
+While shrinking the window, the frequency of the character contributing to maxFreq may decrease or even leave the window entirely. Since the optimized solution never recomputes or decreases maxFreq, how can the algorithm still produce the correct answer?
 
-class Solution {
-    public int characterReplacement(String s, int k) {
-        int n = s.length();
+1. Why don't we recalculate maxFreq after shrinking?
 
-        int maxLen = 0;
-        for(int i=0; i<n; i++){
-            
-            int freq[] = new int[26];
-            int maxFreq = 0;
+2. Doesn't the stored maxFreq become incorrect for the current window?
 
-            for(int j=i; j<n; j++){
-                freq[s.charAt(j)-'A']++;
-                
-                maxFreq = Math.max(maxFreq, freq[s.charAt(i)-'A']);
+3. How can an outdated (historical) maxFreq still be sufficient to decide when to shrink the window?
 
-                int windowLength = j-i+1;
-                int replacementNeeded = windowLength - maxFreq;
+4. Why doesn't using a stale maxFreq cause us to miss the correct answer or overestimate the maximum valid window length?
 
-                if(replacementNeeded <= k){
-                    maxLen = Math.max(windowLength, maxLen);
-                }
-            }
-        }
+5. What is the intuition behind storing the historical maximum frequency instead of the current window's maximum frequency?
 
-        return maxLen;
-    }
-}
 
 
 */
